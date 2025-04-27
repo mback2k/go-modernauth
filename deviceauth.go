@@ -1,5 +1,5 @@
 /*
-	go-getmail - Retrieve and forward e-mails between IMAP servers.
+	modernauth - Modern Authentication helper for Go
 	Copyright (C) 2025  Marc Hoersken <info@marc-hoersken.de>
 
 	This program is free software: you can redistribute it and/or modify

@@ -1,5 +1,5 @@
 /*
-	go-getmail - Retrieve and forward e-mails between IMAP servers.
+	modernauth - Modern Authentication helper for Go
 	Copyright (C) 2025  Marc Hoersken <info@marc-hoersken.de>
 
 	This program is free software: you can redistribute it and/or modify
@@ -26,6 +26,8 @@ import (
 	"time"
 
 	"golang.org/x/oauth2"
+
+	"github.com/mback2k/go-modernauth"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
@@ -164,7 +166,7 @@ func (ab *HassMqttAuthBackend) Notify(code *oauth2.DeviceAuthResponse) error {
 }
 
 func NewHassMqttAuthBackend(ctx context.Context, name string,
-	mqttopts *mqtt.ClientOptions, mqttlock *sync.Mutex) *HassMqttAuthBackend {
+	mqttopts *mqtt.ClientOptions, mqttlock *sync.Mutex) modernauth.DeviceAuthBackend {
 
 	return &HassMqttAuthBackend{
 		ctx:  ctx,
