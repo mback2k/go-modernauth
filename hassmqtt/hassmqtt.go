@@ -46,7 +46,8 @@ func (ab *HassMqttAuthBackend) uniqueID() string {
 
 func (ab *HassMqttAuthBackend) LoadToken() (*oauth2.Token, error) {
 	unique_id := ab.uniqueID()
-	base := "modernauth/" + ab.mqttopts.ClientID + "/" + unique_id
+	client_id := ab.mqttopts.ClientID
+	base := "modernauth/" + client_id + "/" + unique_id
 
 	ab.mqttlock.Lock()
 	defer ab.mqttlock.Unlock()
@@ -87,7 +88,8 @@ func (ab *HassMqttAuthBackend) LoadToken() (*oauth2.Token, error) {
 
 func (ab *HassMqttAuthBackend) SaveToken(tok *oauth2.Token) error {
 	unique_id := ab.uniqueID()
-	base := "modernauth/" + ab.mqttopts.ClientID + "/" + unique_id
+	client_id := ab.mqttopts.ClientID
+	base := "modernauth/" + client_id + "/" + unique_id
 
 	ab.mqttlock.Lock()
 	defer ab.mqttlock.Unlock()
@@ -114,7 +116,8 @@ func (ab *HassMqttAuthBackend) SaveToken(tok *oauth2.Token) error {
 
 func (ab *HassMqttAuthBackend) Notify(code *oauth2.DeviceAuthResponse) error {
 	unique_id := ab.uniqueID()
-	base := "homeassistant/event/" + ab.mqttopts.ClientID + "/" + unique_id
+	client_id := ab.mqttopts.ClientID
+	base := "homeassistant/event/" + client_id + "/" + unique_id
 
 	ab.mqttlock.Lock()
 	defer ab.mqttlock.Unlock()
@@ -131,10 +134,13 @@ func (ab *HassMqttAuthBackend) Notify(code *oauth2.DeviceAuthResponse) error {
 		"name":        ab.name,
 		"event_types": []string{"auth"},
 		"state_topic": "~/state",
-		"unique_id":   ab.mqttopts.ClientID + "-" + unique_id,
+		"unique_id":   client_id + "-" + unique_id,
 		"device": map[string]interface{}{
-			"identifiers": []string{ab.mqttopts.ClientID},
-			"name":        ab.name,
+			"identifiers": []string{client_id},
+			"name":        client_id,
+		},
+		"origin": map[string]interface{}{
+			"name": client_id,
 		},
 	}
 	bytes, err := json.Marshal(config)
