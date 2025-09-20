@@ -62,6 +62,15 @@ func (ts *DeviceAuthTokenSource) Token() (*oauth2.Token, error) {
 		return nil, err
 	}
 
+	// Check if we have a token to refresh
+	if token != nil {
+		// Refresh the token if needed and possible
+		token, err = ts.conf.TokenSource(ts.ctx, token).Token()
+		if err != nil {
+			token = nil // force re-authentication
+		}
+	}
+
 	// Check if we need to get a new token
 	if token == nil {
 		// If we don't have a token, we need to get one
@@ -81,12 +90,6 @@ func (ts *DeviceAuthTokenSource) Token() (*oauth2.Token, error) {
 		if err != nil {
 			return nil, err
 		}
-	}
-
-	// Refresh the token if needed
-	token, err = ts.conf.TokenSource(ts.ctx, token).Token()
-	if err != nil {
-		return nil, err
 	}
 
 	// Save the token
